@@ -140,9 +140,9 @@ namespace TrackBack.Forms
                 if (dgvClaims.Columns["ClaimDate"] != null)
                     dgvClaims.Columns["ClaimDate"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
-                foreach (DataGridViewRow row in dgvClaims.Rows)
-                    row.DefaultCellStyle.BackColor =
-                        Color.FromArgb(254, 249, 195);
+                //foreach (DataGridViewRow row in dgvClaims.Rows)
+                //    row.DefaultCellStyle.BackColor =
+                //        Color.FromArgb(254, 249, 195);
             }
             catch (Exception ex)
             {
@@ -188,18 +188,27 @@ namespace TrackBack.Forms
             var claim = dgvClaims.CurrentRow.DataBoundItem as Claim;
             if (claim == null) return;
 
+            // Admin mention the contact of finder in note for claim approval,
+            // so that the person who claimed can contact the finder to recover the item
             string note = Microsoft.VisualBasic.Interaction.InputBox(
-                "Enter admin note:", "Approve Claim",
-                "Details verified");
+                "Enter approval note with finder contact:\n" +
+                "Example: Approved. Contact finder: 0301-1234567",
+                "Approve Claim",
+                "Approved. Contact finder: ");
+
+            if (string.IsNullOrWhiteSpace(note)) return;
 
             try
             {
                 if (_claimRepository.ApproveClaim(claim.ClaimID, note))
                 {
-                    _itemRepository.UpdateItemStatus(claim.ItemID, "Claimed");
-                    MessageBox.Show("Claim approved!", "Success",
-                        MessageBoxButtons.OK,
+                    _itemRepository.UpdateItemStatus(
+                        claim.ItemID, "Claimed");
+
+                    MessageBox.Show("Claim approved!",
+                        "Success", MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
+
                     LoadClaimsTab();
                 }
             }
@@ -208,6 +217,7 @@ namespace TrackBack.Forms
                 MessageBox.Show($"Error: {ex.Message}");
             }
         }
+
 
         // Claim Reject
         private void btnRejectClaim_Click(object sender, EventArgs e)

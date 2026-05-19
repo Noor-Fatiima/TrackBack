@@ -182,7 +182,8 @@ namespace TrackBack.Database
                                    ? null
                                    : GetDateTime(reader, "ResolvedDate"),
                 ItemTitle = GetString(reader, "ItemTitle"),
-                ClaimedByName = GetString(reader, "ClaimedByName")
+                ClaimedByName = GetString(reader, "ClaimedByName"),
+
             };
         }
 

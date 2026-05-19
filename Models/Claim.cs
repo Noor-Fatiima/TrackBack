@@ -17,5 +17,6 @@ namespace TrackBack.Models
         // Navigation properties - display ke liye
         public string ItemTitle { get; set; } = string.Empty;
         public string ClaimedByName { get; set; } = string.Empty;
+
     }
 }
