@@ -147,6 +147,39 @@ namespace TrackBack.Database
             return rowsAffected > 0;
         }
 
+
+        // UPDATE — update item details
+        // only that user can update who created the item — check in WHERE clause
+        public bool UpdateItem(Item item)
+        {
+            string sql = @"
+            UPDATE Items
+            SET CategoryID   = @categoryID,
+            LocationID   = @locationID,
+            ItemTitle    = @itemTitle,
+            Description  = @description,
+            ItemType     = @itemType,
+            DateOccurred = @dateOccurred
+            WHERE ItemID  = @itemID            
+            AND   UserID  = @userID";         //only  update your own item not others — security check
+
+            var parameters = new SQLiteParameter[]
+            {
+                  new SQLiteParameter("@categoryID",   item.CategoryID),
+                  new SQLiteParameter("@locationID",   item.LocationID),
+                  new SQLiteParameter("@itemTitle",    item.ItemTitle),
+                  new SQLiteParameter("@description",  string.IsNullOrEmpty(item.Description)
+                                             ? (object)DBNull.Value
+                                             : item.Description),
+                  new SQLiteParameter("@itemType",     item.ItemType),
+                  new SQLiteParameter("@dateOccurred", item.DateOccurred),
+                  new SQLiteParameter("@itemID",       item.ItemID),
+                  new SQLiteParameter("@userID",       item.UserID)
+            };
+
+            return ExecuteNonQuery(sql, parameters) > 0;
+        }
+
         // Item delete — Admin only
         // delete only if no one claimed it
         public bool DeleteItem(int itemID)

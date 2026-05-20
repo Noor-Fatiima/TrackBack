@@ -149,5 +149,40 @@ namespace TrackBack.Forms
                 this.Close();
             }
         }
+
+        private void btnEditItem_Click(object sender, EventArgs e)
+        {
+            // is any row selected?
+            if (dgvRecentItems.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an item to edit.",
+                    "No Selection", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                return;
+            }
+
+            var selectedItem = dgvRecentItems.CurrentRow
+                .DataBoundItem as Item;
+
+            if (selectedItem == null) return;
+
+            // only active items can be edited
+            if (selectedItem.Status != "Active")
+            {
+                MessageBox.Show(
+                    "Only Active items can be edited.\n" +
+                    "Claimed or Closed items cannot be changed.",
+                    "Cannot Edit", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                return;
+            }
+
+            // open frmAddItem in edit mode
+            var editForm = new frmAddItem(_currentUser, selectedItem);
+            if (editForm.ShowDialog() == DialogResult.OK)
+            {
+                LoadDashboard(); // refresh data
+            }
+        }
     }
 }

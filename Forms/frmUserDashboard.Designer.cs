@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             panel1 = new Panel();
+            lblUserName = new Label();
             btnLogout = new Button();
             btnMyClaims = new Button();
             btnSearchItems = new Button();
@@ -55,7 +56,7 @@
             dgvRecentItems = new DataGridView();
             dgvMyClaims = new DataGridView();
             lblClaimsTitle = new Label();
-            lblUserName = new Label();
+            btnEditItem = new Button();
             panel1.SuspendLayout();
             panel2.SuspendLayout();
             pnlLost.SuspendLayout();
@@ -83,6 +84,17 @@
             panel1.Name = "panel1";
             panel1.Size = new Size(786, 1094);
             panel1.TabIndex = 0;
+            // 
+            // lblUserName
+            // 
+            lblUserName.AutoSize = true;
+            lblUserName.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
+            lblUserName.ForeColor = Color.White;
+            lblUserName.Location = new Point(223, 139);
+            lblUserName.Name = "lblUserName";
+            lblUserName.Size = new Size(293, 54);
+            lblUserName.TabIndex = 9;
+            lblUserName.Text = "Welcome User\r\n";
             // 
             // btnLogout
             // 
@@ -339,7 +351,7 @@
             lblRecentActivity.AutoSize = true;
             lblRecentActivity.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblRecentActivity.ForeColor = Color.SteelBlue;
-            lblRecentActivity.Location = new Point(818, 561);
+            lblRecentActivity.Location = new Point(806, 539);
             lblRecentActivity.Name = "lblRecentActivity";
             lblRecentActivity.Size = new Size(214, 38);
             lblRecentActivity.TabIndex = 8;
@@ -351,7 +363,7 @@
             dgvRecentItems.AllowUserToDeleteRows = false;
             dgvRecentItems.BackgroundColor = SystemColors.ButtonHighlight;
             dgvRecentItems.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvRecentItems.Location = new Point(806, 621);
+            dgvRecentItems.Location = new Point(806, 594);
             dgvRecentItems.Name = "dgvRecentItems";
             dgvRecentItems.ReadOnly = true;
             dgvRecentItems.RowHeadersWidth = 62;
@@ -364,7 +376,7 @@
             dgvMyClaims.AllowUserToDeleteRows = false;
             dgvMyClaims.BackgroundColor = SystemColors.ButtonHighlight;
             dgvMyClaims.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dgvMyClaims.Location = new Point(806, 889);
+            dgvMyClaims.Location = new Point(806, 927);
             dgvMyClaims.Name = "dgvMyClaims";
             dgvMyClaims.ReadOnly = true;
             dgvMyClaims.RowHeadersWidth = 62;
@@ -376,22 +388,25 @@
             lblClaimsTitle.AutoSize = true;
             lblClaimsTitle.Font = new Font("Segoe UI", 14F, FontStyle.Bold);
             lblClaimsTitle.ForeColor = Color.SteelBlue;
-            lblClaimsTitle.Location = new Point(818, 829);
+            lblClaimsTitle.Location = new Point(806, 868);
             lblClaimsTitle.Name = "lblClaimsTitle";
             lblClaimsTitle.Size = new Size(153, 38);
             lblClaimsTitle.TabIndex = 12;
             lblClaimsTitle.Text = "My Claims";
             // 
-            // lblUserName
+            // btnEditItem
             // 
-            lblUserName.AutoSize = true;
-            lblUserName.Font = new Font("Segoe UI", 20F, FontStyle.Bold);
-            lblUserName.ForeColor = Color.White;
-            lblUserName.Location = new Point(223, 139);
-            lblUserName.Name = "lblUserName";
-            lblUserName.Size = new Size(293, 54);
-            lblUserName.TabIndex = 9;
-            lblUserName.Text = "Welcome User\r\n";
+            btnEditItem.BackColor = Color.FromArgb(220, 38, 38);
+            btnEditItem.FlatStyle = FlatStyle.Flat;
+            btnEditItem.Font = new Font("Segoe UI", 11F, FontStyle.Bold);
+            btnEditItem.ForeColor = Color.White;
+            btnEditItem.Location = new Point(1483, 772);
+            btnEditItem.Name = "btnEditItem";
+            btnEditItem.Size = new Size(195, 95);
+            btnEditItem.TabIndex = 13;
+            btnEditItem.Text = " Edit Selected Item";
+            btnEditItem.UseVisualStyleBackColor = false;
+            btnEditItem.Click += btnEditItem_Click;
             // 
             // frmUserDashboard
             // 
@@ -399,6 +414,7 @@
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 250, 252);
             ClientSize = new Size(1747, 1094);
+            Controls.Add(btnEditItem);
             Controls.Add(lblClaimsTitle);
             Controls.Add(dgvMyClaims);
             Controls.Add(dgvRecentItems);
@@ -460,5 +476,6 @@
         private DataGridView dgvMyClaims;
         private Label lblClaimsTitle;
         private Label lblUserName;
+        private Button btnEditItem;
     }
 }

@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Data.SQLite;
 using TrackBack.Database;
 using TrackBack.Models;
 
@@ -20,6 +14,11 @@ namespace TrackBack.Forms
         private readonly CategoryRepository _categoryRepository;
         private readonly LocationRepository _locationRepository;
 
+        // for Edit mode 
+        private Item _editItem = null;
+        private bool _isEditMode = false;
+
+        // ADD mode constructor — new item
         public frmAddItem(User user, string itemType)
         {
             InitializeComponent();
@@ -28,23 +27,48 @@ namespace TrackBack.Forms
             _itemRepository = new ItemRepository();
             _categoryRepository = new CategoryRepository();
             _locationRepository = new LocationRepository();
+            _isEditMode = false;
+
             SetItemType();
             LoadDropdowns();
         }
 
+        // EDIT mode constructor — old item
+        public frmAddItem(User user, Item editItem)
+        {
+            InitializeComponent();
+            _currentUser = user;
+            _editItem = editItem;
+            _itemType = editItem.ItemType;
+            _itemRepository = new ItemRepository();
+            _categoryRepository = new CategoryRepository();
+            _locationRepository = new LocationRepository();
+            _isEditMode = true;
+
+            SetItemType();
+            LoadDropdowns();
+            FillEditData(); // Fill old data in the form
+        }
+
         private void SetItemType()
         {
-            if (_itemType == "Lost")
+            if (_isEditMode)
             {
-                rbLost.Checked = true;
-                lblTitle.Text = "Report Lost Item";
+                this.Text = "Edit Item";
+                lblTitle.Text = "Edit Item";
+                btnSubmit.Text = "Update";
+            }
+            else if (_itemType == "Lost")
+            {
                 this.Text = "Report Lost Item";
+                lblTitle.Text = "Report Lost Item";
+                btnSubmit.Text = "Submit";
             }
             else
             {
-                rbFound.Checked = true;
-                lblTitle.Text = "Register Found Item";
                 this.Text = "Register Found Item";
+                lblTitle.Text = "Register Found Item";
+                btnSubmit.Text = "Submit";
             }
         }
 
@@ -67,9 +91,26 @@ namespace TrackBack.Forms
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error loading data: {ex.Message}",
-                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}");
             }
+        }
+
+        // Fill old data in the form for Edit mode
+        private void FillEditData()
+        {
+            txtItemTitle.Text = _editItem.ItemTitle;
+            txtDescription.Text = _editItem.Description;
+            dtpDateOccurred.Value = _editItem.DateOccurred;
+
+            // Set ItemType radio button
+            if (_editItem.ItemType == "Lost")
+                rbLost.Checked = true;
+            else
+                rbFound.Checked = true;
+
+            // select right category and location in dropdowns
+            cmbCategory.SelectedValue = _editItem.CategoryID;
+            cmbLocation.SelectedValue = _editItem.LocationID;
         }
 
         private void btnSubmit_Click(object sender, EventArgs e)
@@ -89,7 +130,6 @@ namespace TrackBack.Forms
                 MessageBox.Show("Please select a category.",
                     "Validation", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
-                cmbCategory.Focus();
                 return;
             }
 
@@ -98,44 +138,74 @@ namespace TrackBack.Forms
                 MessageBox.Show("Please select a location.",
                     "Validation", MessageBoxButtons.OK,
                     MessageBoxIcon.Warning);
-                cmbLocation.Focus();
                 return;
             }
 
             try
             {
-                var item = new Item
+                if (_isEditMode)
                 {
-                    UserID = _currentUser.UserID,
-                    CategoryID = (int)cmbCategory.SelectedValue,
-                    LocationID = (int)cmbLocation.SelectedValue,
-                    ItemTitle = txtItemTitle.Text.Trim(),
-                    Description = txtDescription.Text.Trim(),
-                    ItemType = rbLost.Checked ? "Lost" : "Found",
-                    DateOccurred = dtpDateOccurred.Value,
-                    Status = "Active",
-                    //IsMatched = false
-                };
+                    // EDIT MODE — update 
+                    _editItem.CategoryID = (int)cmbCategory.SelectedValue;
+                    _editItem.LocationID = (int)cmbLocation.SelectedValue;
+                    _editItem.ItemTitle = txtItemTitle.Text.Trim();
+                    _editItem.Description = txtDescription.Text.Trim();
+                    _editItem.ItemType = rbLost.Checked ? "Lost" : "Found";
+                    _editItem.DateOccurred = dtpDateOccurred.Value;
 
-                if (_itemRepository.AddItem(item))
-                {
-                        MessageBox.Show("Item reported successfully!",
+                    if (_itemRepository.UpdateItem(_editItem))
+                    {
+                        MessageBox.Show("Item updated successfully!",
                             "Success", MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
 
-                    this.DialogResult = DialogResult.OK;
-                    this.Close();
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Update failed.",
+                            "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Failed to save item.", "Error",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    // ADD MODE — add new item
+                    var item = new Item
+                    {
+                        UserID = _currentUser.UserID,
+                        CategoryID = (int)cmbCategory.SelectedValue,
+                        LocationID = (int)cmbLocation.SelectedValue,
+                        ItemTitle = txtItemTitle.Text.Trim(),
+                        Description = txtDescription.Text.Trim(),
+                        ItemType = rbLost.Checked ? "Lost" : "Found",
+                        DateOccurred = dtpDateOccurred.Value,
+                        Status = "Active",
+                    };
+
+                    if (_itemRepository.AddItem(item))
+                    {
+                        MessageBox.Show("Item reported successfully!",
+                            "Success", MessageBoxButtons.OK,
+                             MessageBoxIcon.Information);
+
+                        this.DialogResult = DialogResult.OK;
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Failed to save item.",
+                            "Error", MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}",
+                    "Error", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
             }
         }
 
