@@ -65,6 +65,7 @@
             tabUsers = new TabPage();
             btnDeleteUser = new Button();
             dgvUsers = new DataGridView();
+            btnDeleteClaim = new Button();
             panel1.SuspendLayout();
             tabMain.SuspendLayout();
             tabDashboard.SuspendLayout();
@@ -142,7 +143,7 @@
             tabMain.Controls.Add(tabFoundItems);
             tabMain.Controls.Add(tabClaims);
             tabMain.Controls.Add(tabUsers);
-            tabMain.Location = new Point(390, 336);
+            tabMain.Location = new Point(395, 340);
             tabMain.Margin = new Padding(4);
             tabMain.Name = "tabMain";
             tabMain.SelectedIndex = 0;
@@ -364,11 +365,11 @@
             // 
             tabLostItems.Controls.Add(btnDeleteItem);
             tabLostItems.Controls.Add(dgvLostItems);
-            tabLostItems.Location = new Point(4, 39);
+            tabLostItems.Location = new Point(4, 34);
             tabLostItems.Margin = new Padding(4);
             tabLostItems.Name = "tabLostItems";
             tabLostItems.Padding = new Padding(4);
-            tabLostItems.Size = new Size(904, 527);
+            tabLostItems.Size = new Size(904, 532);
             tabLostItems.TabIndex = 1;
             tabLostItems.Text = "Lost Items";
             tabLostItems.UseVisualStyleBackColor = true;
@@ -404,11 +405,11 @@
             // 
             tabFoundItems.Controls.Add(btnDeleteFoundItem);
             tabFoundItems.Controls.Add(dgvFoundItems);
-            tabFoundItems.Location = new Point(4, 39);
+            tabFoundItems.Location = new Point(4, 34);
             tabFoundItems.Margin = new Padding(4);
             tabFoundItems.Name = "tabFoundItems";
             tabFoundItems.Padding = new Padding(4);
-            tabFoundItems.Size = new Size(904, 527);
+            tabFoundItems.Size = new Size(904, 532);
             tabFoundItems.TabIndex = 2;
             tabFoundItems.Text = "Found Items";
             tabFoundItems.UseVisualStyleBackColor = true;
@@ -441,6 +442,7 @@
             // 
             // tabClaims
             // 
+            tabClaims.Controls.Add(btnDeleteClaim);
             tabClaims.Controls.Add(btnApproveClaim);
             tabClaims.Controls.Add(btnRejectClaim);
             tabClaims.Controls.Add(dgvClaims);
@@ -457,7 +459,7 @@
             btnApproveClaim.BackColor = Color.SteelBlue;
             btnApproveClaim.FlatStyle = FlatStyle.Flat;
             btnApproveClaim.ForeColor = Color.White;
-            btnApproveClaim.Location = new Point(168, 358);
+            btnApproveClaim.Location = new Point(328, 358);
             btnApproveClaim.Margin = new Padding(5);
             btnApproveClaim.Name = "btnApproveClaim";
             btnApproveClaim.Size = new Size(238, 108);
@@ -471,7 +473,7 @@
             btnRejectClaim.BackColor = Color.FromArgb(220, 38, 38);
             btnRejectClaim.FlatStyle = FlatStyle.Flat;
             btnRejectClaim.ForeColor = Color.White;
-            btnRejectClaim.Location = new Point(496, 358);
+            btnRejectClaim.Location = new Point(628, 358);
             btnRejectClaim.Margin = new Padding(5);
             btnRejectClaim.Name = "btnRejectClaim";
             btnRejectClaim.Size = new Size(238, 108);
@@ -497,10 +499,10 @@
             // 
             tabUsers.Controls.Add(btnDeleteUser);
             tabUsers.Controls.Add(dgvUsers);
-            tabUsers.Location = new Point(4, 39);
+            tabUsers.Location = new Point(4, 34);
             tabUsers.Margin = new Padding(4);
             tabUsers.Name = "tabUsers";
-            tabUsers.Size = new Size(904, 527);
+            tabUsers.Size = new Size(904, 532);
             tabUsers.TabIndex = 4;
             tabUsers.Text = "Users";
             tabUsers.UseVisualStyleBackColor = true;
@@ -532,12 +534,26 @@
             dgvUsers.Size = new Size(828, 252);
             dgvUsers.TabIndex = 7;
             // 
+            // btnDeleteClaim
+            // 
+            btnDeleteClaim.BackColor = Color.FromArgb(220, 38, 38);
+            btnDeleteClaim.FlatStyle = FlatStyle.Flat;
+            btnDeleteClaim.ForeColor = Color.White;
+            btnDeleteClaim.Location = new Point(38, 358);
+            btnDeleteClaim.Margin = new Padding(5);
+            btnDeleteClaim.Name = "btnDeleteClaim";
+            btnDeleteClaim.Size = new Size(238, 108);
+            btnDeleteClaim.TabIndex = 10;
+            btnDeleteClaim.Text = "Delete";
+            btnDeleteClaim.UseVisualStyleBackColor = false;
+            btnDeleteClaim.Click += btnDeleteClaim_Click;
+            // 
             // frmAdminPanel
             // 
             AutoScaleDimensions = new SizeF(13F, 30F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(248, 250, 252);
-            ClientSize = new Size(1768, 878);
+            ClientSize = new Size(1768, 931);
             Controls.Add(tabMain);
             Controls.Add(panel1);
             Font = new Font("Segoe UI", 11F, FontStyle.Bold);
@@ -611,5 +627,6 @@
         private DataGridView dgvClaims;
         private Button btnDeleteUser;
         private DataGridView dgvUsers;
+        private Button btnDeleteClaim;
     }
 }

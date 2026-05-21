@@ -29,8 +29,8 @@ namespace TrackBack.Forms
             _locationRepository = new LocationRepository();
             _isEditMode = false;
 
-            SetItemType();
-            LoadDropdowns();
+            SetItemType();  //set title and button text
+            LoadDropdowns(); //load categories and location from database
         }
 
         // EDIT mode constructor — old item
@@ -54,7 +54,7 @@ namespace TrackBack.Forms
         {
             if (_isEditMode)
             {
-                this.Text = "Edit Item";
+                this.Text = "Edit Item"; //text in window's title bar
                 lblTitle.Text = "Edit Item";
                 btnSubmit.Text = "Update";
             }
@@ -78,16 +78,16 @@ namespace TrackBack.Forms
             {
                 var categories = _categoryRepository.GetAllCategories();
                 cmbCategory.DataSource = categories;
-                cmbCategory.DisplayMember = "CategoryName";
-                cmbCategory.ValueMember = "CategoryID";
+                cmbCategory.DisplayMember = "CategoryName"; //MobilePhone, Wallet, etc. will show to user
+                cmbCategory.ValueMember = "CategoryID"; // but internally use CategoryID for database operations
 
                 var locations = _locationRepository.GetAllLocations();
                 cmbLocation.DataSource = locations;
-                cmbLocation.DisplayMember = "LocationName";
-                cmbLocation.ValueMember = "LocationID";
+                cmbLocation.DisplayMember = "LocationName"; 
+                cmbLocation.ValueMember = "LocationID";    
 
-                dtpDateOccurred.Value = DateTime.Today;
-                dtpDateOccurred.MaxDate = DateTime.Today;
+                dtpDateOccurred.Value = DateTime.Today; //default to today
+                dtpDateOccurred.MaxDate = DateTime.Today;// prevent future dates
             }
             catch (Exception ex)
             {
@@ -146,7 +146,7 @@ namespace TrackBack.Forms
                 if (_isEditMode)
                 {
                     // EDIT MODE — update 
-                    _editItem.CategoryID = (int)cmbCategory.SelectedValue;
+                    _editItem.CategoryID = (int)cmbCategory.SelectedValue; //type is object, so we need to cast it to int
                     _editItem.LocationID = (int)cmbLocation.SelectedValue;
                     _editItem.ItemTitle = txtItemTitle.Text.Trim();
                     _editItem.Description = txtDescription.Text.Trim();

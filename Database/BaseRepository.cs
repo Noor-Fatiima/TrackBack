@@ -5,29 +5,30 @@ using System.Data.SQLite;
 
 namespace TrackBack.Database
 {
-    public abstract class BaseRepository
+    public abstract class BaseRepository //can inherit this class to other repository classes to avoid code duplication 
     {
         protected SQLiteConnection GetConnection()
         {
             return DBConnection.GetConnection();
         }
 
-        // for INSERT, UPDATE, DELETE 
+        // for INSERT, UPDATE, DELETE when we don't expect any result back, just how many rows affected
         protected int ExecuteNonQuery(string sql, SQLiteParameter[]? parameters = null)
         {
             using (var conn = GetConnection())
             {
                 conn.Open();
-                using (var cmd = new SQLiteCommand(sql, conn))
+                using (var cmd = new SQLiteCommand(sql, conn)) //this object execute sql
                 {
                     if (parameters != null)
-                        cmd.Parameters.AddRange(parameters);
-                    return cmd.ExecuteNonQuery();
+                        cmd.Parameters.AddRange(parameters); //AddRange method allows to add multiple parameters to the command in one call
+                    return cmd.ExecuteNonQuery(); //returns how many rows affected
                 }
             }
         }
 
         // for Single value  — COUNT etc
+        // object (generic type)  caller can cast it to int, string etc as needed
         protected object ExecuteScalar(string sql, SQLiteParameter[]? parameters = null)
         {
             using (var conn = GetConnection())
@@ -42,10 +43,10 @@ namespace TrackBack.Database
             }
         }
 
-        // for DataGridView 
+        // for DataGridView - datatable is like excel sheet in memory , rows and columns
         protected DataTable ExecuteReader(string sql, SQLiteParameter[]? parameters = null)
         {
-            var dt = new DataTable();
+            var dt = new DataTable(); //empty table create
             using (var conn = GetConnection())
             {
                 conn.Open();
@@ -54,7 +55,7 @@ namespace TrackBack.Database
                     if (parameters != null)
                         cmd.Parameters.AddRange(parameters);
                     using (var adapter = new SQLiteDataAdapter(cmd))
-                        adapter.Fill(dt);
+                        adapter.Fill(dt); //run query and fill the datatable with result
                 }
             }
             return dt;
@@ -81,11 +82,11 @@ namespace TrackBack.Database
             }
         }
 
-        // Multiple rows → List
+        // Multiple rows to List of objects - use in GetAllItems(), GetClaimsByUserID() etc
         protected List<T> ExecuteList<T>(string sql, Func<SQLiteDataReader, T> mapper, 
             SQLiteParameter[]? parameters = null)
         {
-            var results = new List<T>();
+            var results = new List<T>(); // empty list create
             using (var conn = GetConnection())
             {
                 conn.Open();
@@ -104,7 +105,7 @@ namespace TrackBack.Database
         // Safe string
         protected string GetString(SQLiteDataReader r, string col)
         {
-            int i = r.GetOrdinal(col);
+            int i = r.GetOrdinal(col); //get column index number from column name
             return r.IsDBNull(i) ? string.Empty : r.GetString(i);
         }
 
@@ -119,17 +120,17 @@ namespace TrackBack.Database
         protected bool GetBoolean(SQLiteDataReader r, string col)
         {
             int i = r.GetOrdinal(col);
-            return !r.IsDBNull(i) && r.GetBoolean(i);
+            return !r.IsDBNull(i) && r.GetBoolean(i); //not null and true
         }
 
         // Safe DateTime
         protected DateTime GetDateTime(SQLiteDataReader r, string col)
         {
             int i = r.GetOrdinal(col);
-            return r.IsDBNull(i) ? DateTime.MinValue : DateTime.Parse(r.GetString(i));
+            return r.IsDBNull(i) ? DateTime.MinValue : DateTime.Parse(r.GetString(i)); //datetime is stored in text form so parse it
         }
 
-        // after Insert new row's Id
+        // after Insert gives new row's Id
         protected long GetLastInsertId()
         {
             object result = ExecuteScalar("SELECT last_insert_rowid();");

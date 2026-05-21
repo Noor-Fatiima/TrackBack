@@ -37,8 +37,7 @@ namespace TrackBack.Forms
                 dgvItems.AllowUserToAddRows = false;
                 dgvItems.ReadOnly = true;
                 dgvItems.RowHeadersVisible = false;
-                dgvItems.SelectionMode =
-                    DataGridViewSelectionMode.FullRowSelect;
+                dgvItems.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
                 foreach (DataGridViewColumn col in dgvItems.Columns)
                     col.Visible = false;
@@ -53,19 +52,8 @@ namespace TrackBack.Forms
                 ShowCol("DateOccurred", "Date", 100);
 
                 if (dgvItems.Columns["DateOccurred"] != null)
-                    dgvItems.Columns["DateOccurred"]
-                        .DefaultCellStyle.Format = "dd-MMM-yyyy";
+                    dgvItems.Columns["DateOccurred"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
-                foreach (DataGridViewRow row in dgvItems.Rows)
-                {
-                    string type = row.Cells["ItemType"]? .Value?.ToString();
-                    if (type == "Lost")
-                        row.DefaultCellStyle.BackColor =
-                            Color.FromArgb(255, 226, 226);
-                    else if (type == "Found")
-                        row.DefaultCellStyle.BackColor =
-                            Color.FromArgb(224, 242, 254);
-                }
 
                 lblStatus.Text = $"Total: {items.Count} items";
             }
@@ -89,8 +77,7 @@ namespace TrackBack.Forms
         {
             try
             {
-                var results = _itemRepository.SearchItems(
-                    txtSearch.Text.Trim());
+                var results = _itemRepository.SearchItems(txtSearch.Text.Trim());
                 dgvItems.DataSource = null;
                 dgvItems.DataSource = results;
                 lblStatus.Text = $"Total: {results.Count} items";
@@ -130,8 +117,7 @@ namespace TrackBack.Forms
                 return;
             }
 
-            if (_claimRepository.HasUserAlreadyClaimed(
-                item.ItemID, _currentUser.UserID))
+            if (_claimRepository.HasUserAlreadyClaimed(item.ItemID, _currentUser.UserID))
             {
                 MessageBox.Show("Already claimed this item.");
                 return;

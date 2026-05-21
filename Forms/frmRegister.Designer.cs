@@ -148,7 +148,7 @@
             btnRegister.FlatStyle = FlatStyle.Flat;
             btnRegister.Font = new Font("Segoe UI", 11F);
             btnRegister.ForeColor = Color.White;
-            btnRegister.Location = new Point(58, 629);
+            btnRegister.Location = new Point(94, 629);
             btnRegister.Name = "btnRegister";
             btnRegister.Size = new Size(119, 53);
             btnRegister.TabIndex = 8;
@@ -162,7 +162,7 @@
             btnCancel.FlatStyle = FlatStyle.Flat;
             btnCancel.Font = new Font("Segoe UI", 11F);
             btnCancel.ForeColor = Color.White;
-            btnCancel.Location = new Point(336, 629);
+            btnCancel.Location = new Point(315, 629);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new Size(123, 53);
             btnCancel.TabIndex = 9;

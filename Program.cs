@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using TrackBack.Database;
-using TrackBack.Forms;
+using TrackBack.Forms;  //forms folder import
 
 namespace TrackBack
 {
@@ -10,8 +10,8 @@ namespace TrackBack
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
+            Application.EnableVisualStyles(); // for modern look of buttons,textboxes
+            Application.SetCompatibleTextRenderingDefault(false); //false=modern , true=old GDI
 
             DBConnection.SeedAdminIfNotExists();
 

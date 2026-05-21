@@ -13,7 +13,7 @@ using TrackBack.Models;
 
 namespace TrackBack.Forms
 {
-    public partial class frmLogin : Form
+    public partial class frmLogin : Form // Login form for user authentication
     {
         private readonly UserRepository _userRepository;
 

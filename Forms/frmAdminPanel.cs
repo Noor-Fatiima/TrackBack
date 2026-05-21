@@ -81,9 +81,6 @@ namespace TrackBack.Forms
                 if (dgvLostItems.Columns["DateOccurred"] != null)
                     dgvLostItems.Columns["DateOccurred"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
-                //foreach (DataGridViewRow row in dgvLostItems.Rows)
-                //    row.DefaultCellStyle.BackColor =
-                //        Color.FromArgb(255, 226, 226);
             }
             catch (Exception ex)
             {
@@ -111,9 +108,6 @@ namespace TrackBack.Forms
                 if (dgvFoundItems.Columns["DateOccurred"] != null)
                     dgvFoundItems.Columns["DateOccurred"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
-                //foreach (DataGridViewRow row in dgvFoundItems.Rows)
-                //    row.DefaultCellStyle.BackColor =
-                //        Color.FromArgb(224, 242, 254);
             }
             catch (Exception ex)
             {
@@ -140,9 +134,6 @@ namespace TrackBack.Forms
                 if (dgvClaims.Columns["ClaimDate"] != null)
                     dgvClaims.Columns["ClaimDate"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
-                //foreach (DataGridViewRow row in dgvClaims.Rows)
-                //    row.DefaultCellStyle.BackColor =
-                //        Color.FromArgb(254, 249, 195);
             }
             catch (Exception ex)
             {
@@ -253,6 +244,40 @@ namespace TrackBack.Forms
             }
         }
 
+        //Delete claim
+        private void btnDeleteClaim_Click(object sender, EventArgs e)
+        {
+            if (dgvClaims.CurrentRow == null)
+            {
+                MessageBox.Show("Please select an item.");
+                return;
+            }
+
+            var claim = dgvClaims.CurrentRow.DataBoundItem as Claim;
+            if (claim == null) return;
+
+            if (MessageBox.Show($"Delete '{claim.ItemTitle}'?",
+                "Confirm", MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning) == DialogResult.Yes)
+            {
+                try
+                {
+                    if (_claimRepository.DeleteClaim(claim.ClaimID))
+                    {
+                        MessageBox.Show("Claim deleted.", "Success");
+                        LoadClaimsTab();
+                    }
+                    else
+                        MessageBox.Show("Cannot delete — claims exist.");
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error: {ex.Message}");
+                }
+            }
+        }
+
+
         // Lost item delete
         private void btnDeleteItem_Click(object sender, EventArgs e)
         {
@@ -319,6 +344,7 @@ namespace TrackBack.Forms
             }
         }
 
+
         // User delete
         private void btnDeleteUser_Click(object sender, EventArgs e)
         {
@@ -376,15 +402,13 @@ namespace TrackBack.Forms
             dgv.AllowUserToAddRows = false;
             dgv.ReadOnly = true;
             dgv.RowHeadersVisible = false;
-            dgv.SelectionMode =
-                DataGridViewSelectionMode.FullRowSelect;
+            dgv.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
             foreach (DataGridViewColumn col in dgv.Columns)
                 col.Visible = false;
         }
 
-        private void ShowCol(DataGridView dgv,
-            string col, string header, int width)
+        private void ShowCol(DataGridView dgv, string col, string header, int width)
         {
             if (dgv.Columns[col] != null)
             {
@@ -393,5 +417,6 @@ namespace TrackBack.Forms
                 dgv.Columns[col].Width = width;
             }
         }
+
     }
 }

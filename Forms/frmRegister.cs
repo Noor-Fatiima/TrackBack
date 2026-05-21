@@ -7,8 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using TrackBack.Forms;
+using System.Xml.Linq;
 using TrackBack.Database;
+using TrackBack.Forms;
 using TrackBack.Models;
 
 
@@ -90,6 +91,56 @@ namespace TrackBack.Forms
                 return;
             }
 
+            if (!txtEmail.Text.Trim().Contains("@"))
+            {
+                MessageBox.Show("Please enter a valid email address.",
+                    "Validation", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
+            string email = txtEmail.Text.Trim();
+
+            // Step 1: find @  — from LastIndexOf 
+            int atIndex = email.LastIndexOf('@');
+
+            // Step 2: @ is not present
+            if (atIndex <= 0)
+            {
+                MessageBox.Show("Email must contain '@'.\nExample: ali@gmail.com",
+                    "Invalid Email",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
+            // Step 3: find dot after @
+            int dotIndex = email.LastIndexOf('.');
+
+            // Step 4: dot is before @ or not present
+            if (dotIndex <= atIndex)
+            {
+                MessageBox.Show("Email must contain '.' after '@'.\nExample: ali@gmail.com",
+                    "Invalid Email",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
+            // Step 5: something should be after dot
+            if (dotIndex >= email.Length - 1)
+            {
+                MessageBox.Show("Email domain is incomplete.\nExample: ali@gmail.com",
+                    "Invalid Email",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                txtEmail.Focus();
+                return;
+            }
+
             try
             {
                 // Check email already exists
@@ -102,7 +153,7 @@ namespace TrackBack.Forms
                     return;
                 }
 
-                // Create user object
+                // Create user object 
                 var user = new User
                 {
                     FullName = txtFullName.Text.Trim(),
@@ -117,8 +168,7 @@ namespace TrackBack.Forms
 
                 if (success)
                 {
-                    MessageBox.Show(
-                        "Account created successfully!\nYou can now login.",
+                    MessageBox.Show("Account created successfully!\nYou can now login.",
                         "Success", MessageBoxButtons.OK,
                         MessageBoxIcon.Information);
 
@@ -139,8 +189,7 @@ namespace TrackBack.Forms
             }
         }
 
-        private void lnkBack_LinkClicked(object sender,
-            LinkLabelLinkClickedEventArgs e)
+        private void lnkBack_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             this.Close();
         }
@@ -156,6 +205,8 @@ namespace TrackBack.Forms
             //txtConfirmPassword.Clear();
             //txtFullName.Focus();
         }
+
+  
     }
 }
 

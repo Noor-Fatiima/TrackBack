@@ -25,8 +25,7 @@ namespace TrackBack.Database
         public List<Claim> GetClaimsByUserID(int userID)
         {
             string sql = BaseQuery +
-                " WHERE cl.ClaimedByID = @userID " +
-                "ORDER BY cl.ClaimDate DESC";
+                " WHERE cl.ClaimedByID = @userID  ORDER BY cl.ClaimDate DESC";
 
             var p = new SQLiteParameter[]
             { new SQLiteParameter("@userID", userID) };
@@ -37,9 +36,9 @@ namespace TrackBack.Database
         // READ — pending claims — for admin review 
         public List<Claim> GetPendingClaims()
         {
-            return ExecuteList(
-                BaseQuery + " WHERE cl.Status = 'Pending' ORDER BY cl.ClaimDate ASC",
-                reader => MapClaimFromReader(reader));
+            string sql = BaseQuery + 
+                " WHERE cl.Status = 'Pending'  ORDER BY cl.ClaimDate ASC";
+            return ExecuteList(sql, reader => MapClaimFromReader(reader));
         }
 
         #endregion

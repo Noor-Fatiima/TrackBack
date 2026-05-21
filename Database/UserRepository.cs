@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Drawing;
 using TrackBack.Models;
 
 namespace TrackBack.Database
 {
-    using BCrypt = BCrypt.Net.BCrypt;
+    using BCrypt = BCrypt.Net.BCrypt;   //alias ...short name 
 
     public class UserRepository : BaseRepository
     {
@@ -26,7 +27,7 @@ namespace TrackBack.Database
             var user = ExecuteSingle(sql, reader => MapUserFromReader(reader), p);
 
             // verify password from BCrypt 
-            if (user != null && BCrypt.Verify(password, user.PasswordHash))
+            if (user != null && BCrypt.Verify(password, user.PasswordHash)) //one way process...can't get original password from hash
                 return user;
 
             return null;
@@ -91,26 +92,6 @@ namespace TrackBack.Database
             return ExecuteSingle(sql, reader => MapUserFromReader(reader), p);
         }
 
-        // UPDATE — update phone and department of user
-        public bool UpdateUser(User user)
-        {
-            string sql = @"
-                UPDATE Users
-                SET Phone      = @phone,
-                    Department = @department
-                WHERE UserID   = @userID";
-
-            var p = new SQLiteParameter[]
-            {
-                new SQLiteParameter("@phone",      string.IsNullOrEmpty(user.Phone)
-                                                  ? (object)DBNull.Value : user.Phone),
-                new SQLiteParameter("@department", string.IsNullOrEmpty(user.Department)
-                                                  ? (object)DBNull.Value : user.Department),
-                new SQLiteParameter("@userID",     user.UserID)
-            };
-
-            return ExecuteNonQuery(sql, p) > 0;
-        }
 
         // DELETE — delete user
         // if Items present then don't delete

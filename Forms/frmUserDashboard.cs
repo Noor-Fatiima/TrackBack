@@ -37,14 +37,14 @@ namespace TrackBack.Forms
                 lblPendingCount.Text = myClaims.FindAll(c => c.Status == "Pending").Count.ToString();
 
                 // Recent items grid
-                dgvRecentItems.DataSource = null;
+                dgvRecentItems.DataSource = null; 
                 dgvRecentItems.DataSource = myItems;
                 dgvRecentItems.AllowUserToAddRows = false;
                 dgvRecentItems.ReadOnly = true;
                 dgvRecentItems.RowHeadersVisible = false;
 
                 foreach (DataGridViewColumn col in dgvRecentItems.Columns)
-                    col.Visible = false;
+                    col.Visible = false; //first hide all then show those only which are needed
 
                 ShowCol(dgvRecentItems, "ItemTitle", "Item", 200);
                 ShowCol(dgvRecentItems, "ItemType", "Type", 70);
@@ -73,20 +73,22 @@ namespace TrackBack.Forms
                 ShowCol(dgvMyClaims, "AdminNote", "Admin Note", 200);
 
                 if (dgvMyClaims.Columns["ClaimDate"] != null)
-                    dgvMyClaims.Columns["ClaimDate"]
-                        .DefaultCellStyle.Format = "dd-MMM-yyyy";
+                    dgvMyClaims.Columns["ClaimDate"].DefaultCellStyle.Format = "dd-MMM-yyyy";
 
             }
             catch (Exception ex)  // on any error this message box will show
             {
-                MessageBox.Show($"Error: {ex.Message}", "Error",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, 
+                    MessageBoxIcon.Error);
             }
         }
 
+        //Helper Method has 4 parameters - dgv = which grid(RecentItems or MyClaims), col = actual name of column(property name),
+                                         //header = heading that will show,           width = width in pixels
         private void ShowCol(DataGridView dgv, string col, string header, int width)
         {
-            if (dgv.Columns[col] != null)
+            if (dgv.Columns[col] != null) //column exists?
             {
                 dgv.Columns[col].Visible = true;
                 dgv.Columns[col].HeaderText = header;
@@ -103,7 +105,7 @@ namespace TrackBack.Forms
         {
             var form = new frmAddItem(_currentUser, "Lost");
             form.ShowDialog();
-            LoadDashboard();
+            LoadDashboard(); //refreshes dahboard - new item will show which user reported
         }
 
         private void btnRegisterFound_Click(object sender, EventArgs e)
@@ -161,8 +163,8 @@ namespace TrackBack.Forms
                 return;
             }
 
-            var selectedItem = dgvRecentItems.CurrentRow
-                .DataBoundItem as Item;
+            //DataBoundItem - Actual object behind Selected Row ... then cast object to Item
+            var selectedItem = dgvRecentItems.CurrentRow.DataBoundItem as Item;
 
             if (selectedItem == null) return;
 
